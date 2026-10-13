@@ -1,0 +1,78 @@
+### Exemplos de requisição — abra no IntelliJ (HTTP Client) ou no VS Code (extensão REST Client)
+@host = http://localhost:8080
+
+### Criar transação (amount em CENTAVOS: 8000 = R$ 80,00)
+POST {{host}}/transactions
+Content-Type: application/json
+
+{
+  "description": "Compras no mercado",
+  "category": "GROCERIES",
+  "amount": 8000
+}
+
+### Criar transação inválida (retorna 400 com os erros)
+POST {{host}}/transactions
+Content-Type: application/json
+
+{
+  "description": "",
+  "category": "GROCERIES",
+  "amount": -10
+}
+
+### Listar últimas transações
+GET {{host}}/transactions?limit=10
+
+### Listar por categoria
+GET {{host}}/transactions/GROCERIES
+
+### Categoria inexistente (retorna 400 com a lista de categorias)
+GET {{host}}/transactions/PIZZA
+
+### Listar categorias disponíveis
+GET {{host}}/transactions/categories
+
+### Resumo dos últimos 30 dias
+GET {{host}}/transactions/summary?lastDays=30
+
+### Resumo de todo o período
+GET {{host}}/transactions/summary
+
+### IA por texto — registrar gasto
+POST {{host}}/transactions/ai/text
+Content-Type: application/json
+
+{
+  "message": "Gastei 80 reais no mercado e 25 reais e 90 centavos de Uber"
+}
+
+### IA por texto — consulta
+POST {{host}}/transactions/ai/text
+Content-Type: application/json
+
+{
+  "message": "Quanto eu gastei essa semana? Em que categoria gastei mais?"
+}
+
+### IA por áudio — resposta em JSON (transcrição + resposta)
+POST {{host}}/transactions/ai/audio-to-text
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="recording-1.m4a"
+Content-Type: audio/mp4
+
+< ./src/test/resources/audio/recording-1.m4a
+--boundary--
+
+### IA por áudio — resposta em áudio (mp3)
+POST {{host}}/transactions/ai
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="recording-2.m4a"
+Content-Type: audio/mp4
+
+< ./src/test/resources/audio/recording-2.m4a
+--boundary--
