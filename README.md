@@ -1,5 +1,13 @@
 # 💸 Budgeting AI — Assistente financeiro por voz com Spring AI
 
+![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot&logoColor=white)
+![Spring AI](https://img.shields.io/badge/Spring_AI-2.0-6DB33F)
+![Gradle](https://img.shields.io/badge/Gradle-Wrapper-02303A?logo=gradle&logoColor=white)
+
+API REST para registrar e consultar despesas, com um assistente de IA capaz de
+entender comandos por texto ou voz e responder também em áudio.
+
 Projeto do **Desafio de Projeto Spring AI (DIO)**, evoluído a partir do
 [projeto final da trilha Spring Boot](https://github.com/digitalinnovationone/dio-spring-boot-learning-track/tree/main/05-spring-ai).
 
@@ -7,9 +15,20 @@ Você manda um áudio dizendo *"gastei 80 reais no mercado"* ou perguntando *"qu
 A API transcreve a fala, a IA entende a intenção, chama uma **função real da aplicação** (tool calling)
 para salvar ou consultar transações no banco e devolve a resposta **em áudio**.
 
+## Sumário
+
+- [O que o projeto faz](#o-que-o-projeto-faz)
+- [Arquitetura](#arquitetura)
+- [Tecnologias](#tecnologias)
+- [Como executar](#como-executar)
+- [Como testar](#como-testar-o-fluxo-principal)
+- [Endpoints](#endpoints)
+- [Testes](#testes)
+- [Próximos passos](#próximos-passos)
+
 ---
 
-## 📌 O que o projeto faz
+## O que o projeto faz
 
 ```
  áudio ──► Whisper (speech-to-text) ──► ChatClient + Tools ──► Use cases ──► MySQL
@@ -45,7 +64,7 @@ src/main/java/dio/budgeting
 
 ---
 
-## 🚀 Melhorias implementadas
+## Melhorias implementadas
 
 | # | Melhoria | Por quê |
 |---|----------|---------|
@@ -62,7 +81,7 @@ src/main/java/dio/budgeting
 
 ---
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - **Java 21** e **Spring Boot 4.0**
 - **Spring AI 2.0** (OpenAI): `ChatClient`, Tool Calling (`@Tool`), `TranscriptionModel` (whisper-1), `TextToSpeechModel` (gpt-4o-mini-tts)
@@ -73,13 +92,19 @@ src/main/java/dio/budgeting
 
 ---
 
-## ▶️ Como executar
+## Como executar
 
 ### Pré-requisitos
 
-- **JDK 21** (se não tiver, o Gradle baixa automaticamente)
+- **JDK 21** instalado e configurado em `JAVA_HOME`
 - **Docker Desktop** rodando (para o MySQL)
 - Uma **chave da OpenAI** com créditos
+
+Confirme a versão ativa antes de iniciar:
+
+```bash
+java -version
+```
 
 ### 1. Defina a chave da OpenAI
 
@@ -117,7 +142,7 @@ Com a chave definida, os testes `*IT` também rodam (custam alguns centavos).
 
 ---
 
-## 🧪 Como testar o fluxo principal
+## Como testar o fluxo principal
 
 O arquivo [`requests.http`](requests.http) tem todas as requisições prontas (IntelliJ ou extensão REST Client do VS Code).
 Existem áudios de exemplo em `src/test/resources/audio/`.
@@ -198,7 +223,7 @@ curl -X POST http://localhost:8080/transactions \
 
 ---
 
-## 📚 Endpoints
+## Endpoints
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
@@ -216,9 +241,7 @@ curl -X POST http://localhost:8080/transactions \
 
 ---
 
-## 🧠 O que aprendi
-
-> ✏️ *Revise esta seção com as suas palavras antes de entregar.*
+## O que aprendi
 
 - **IA conectada a uma aplicação de verdade**: com `@Tool`, o modelo não "inventa" — ele chama um método Java
   que passa pelas mesmas regras de negócio do REST. Reaproveitar os use cases como tools manteve a arquitetura limpa.
@@ -233,7 +256,24 @@ curl -X POST http://localhost:8080/transactions \
 
 ---
 
-## 🔭 Próximos passos
+## Testes
+
+A suíte cobre regras de domínio, casos de uso, controllers e o contexto Spring com banco H2 em memória.
+
+```bash
+# Windows
+gradlew.bat test
+
+# Linux / macOS
+./gradlew test
+```
+
+Os testes que acessam a OpenAI são identificados pelo sufixo `IT` e só são executados quando
+`OPENAI_API_KEY` está disponível no ambiente.
+
+---
+
+## Próximos passos
 
 - Memória de conversa (`ChatMemory`) para perguntas de continuação ("e no mês passado?")
 - Editar e excluir transações por voz
